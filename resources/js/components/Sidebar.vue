@@ -44,9 +44,8 @@
 </template>
 
 <script>
-import router from '../router';
 
-export default { components: { router } };
+export default {  };
 </script>
 
 <style lang="scss" scoped>
