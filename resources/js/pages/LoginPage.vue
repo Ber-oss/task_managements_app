@@ -9,7 +9,7 @@
                   <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4">Login !</h1>
                   </div>
-                  <form class="user">
+                  <form class="user" @submit.prevent="submitForm">
                     <div class="form-group">
                       <input
                         type="email"
@@ -17,6 +17,7 @@
                         id="exampleInputEmail"
                         aria-describedby="emailHelp"
                         placeholder="Enter Email Address..."
+                        v-model="form.email"
                       />
                     </div>
                     <div class="form-group">
@@ -25,14 +26,15 @@
                         class="form-control form-control-user"
                         id="exampleInputPassword"
                         placeholder="Password"
+                        v-model="form.password"
                       />
                     </div>
-                    <a
-                      href="index.html"
+                    <button
+                      type="submit"
                       class="btn btn-primary btn-user btn-block"
                     >
                       Login
-                    </a>
+                    </button>
                   </form>                
                 </div>
               </div>          
@@ -44,7 +46,31 @@
 </template>
 
 <script>
-export default {};
+import { reactive, onMounted} from 'vue';
+import useAuth from "../services/Auth"
+export default {
+    setup(){
+
+        const {login}=useAuth()
+
+        const form=reactive({
+            email:'',
+            password:''
+        })
+
+        const submitForm=async()=>{
+            await login({...form})
+        }
+
+        onMounted(()=>{
+            console.log(localStorage.getItem("token"))
+        })
+        return {
+            submitForm,
+            form
+        }
+    }
+};
 </script>
 
 <style lang="scss" scoped>
