@@ -1,22 +1,28 @@
 import {createRouter,createWebHistory} from 'vue-router';
 
-import Home from '../components/Home';
-import ProjectsIndex from '../components/projects/ProjectsIndex';
+import DashboardPage from '../pages/DashboardPage.vue'
+import ProjectIndex from '../pages/projects/ProjectIndex.vue'
+import TaskIndex from '../pages/tasks/TaskIndex.vue'
 
 const routes=[
     {
         'path':'/',
-        'name':'home',
-        'component':Home
+        'name':'dashboard',
+        'component':DashboardPage
     },
     {
         'path':'/projects',
         'name':'projects.index',
-        'component':ProjectsIndex
-    }
+        'component':ProjectIndex
+    },
+    {
+        'path':'/tasks',
+        'name':'tasks.index',
+        'component':TaskIndex
+    },
 ];
 
 export default createRouter({
-    history:createWebHistory,
+    history:createWebHistory(),
     routes
 });

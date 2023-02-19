@@ -1,7 +1,10 @@
 <?php
 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\ProjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +17,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::group([
+    'prefix' => 'auth',
+    'middleware' => 'guest',
+], function () {
+    Route::post('login', [AuthController::class,'login']);
+    Route::post('logout', [AuthController::class,'logout']);
+    Route::post('refresh', [AuthController::class,'refresh']);
+    Route::post('authUser', [AuthController::class,'authUser']);
 });
+
+Route::group([
+    'middleware' => 'auth',
+], function () {
+    Route::apiResource('projects',ProjectController::class);
+    Route::apiResource('tasks',ProjectController::class);
+});
+
