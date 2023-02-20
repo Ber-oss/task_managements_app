@@ -8,6 +8,7 @@ import ProjectIndex from '../pages/projects/ProjectIndex.vue'
 import ProjectCreate from '../pages/projects/ProjectCreate.vue'
 import ProjectShow from '../pages/projects/ProjectShow.vue'
 import ProjectEdit from '../pages/projects/ProjectEdit.vue'
+import ProjectTaskCreate from '../pages/projects/tasks/ProjectTaskCreate.vue'
 import TaskIndex from '../pages/tasks/TaskIndex.vue'
 
 const routes=[
@@ -52,7 +53,7 @@ const routes=[
             {
                 'path':'/tasks/create/:project_id?',
                 'name':'tasks.create',
-                'component':TaskIndex,
+                'component':ProjectTaskCreate,
                 "props":true
             },
         ]

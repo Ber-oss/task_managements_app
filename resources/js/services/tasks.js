@@ -1,6 +1,7 @@
-import { ref } from "vue" 
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import client from "../axios/index";
+import { useUserStore } from '../store/userStore';
 
 
 export default function useTask(){
@@ -12,12 +13,19 @@ export default function useTask(){
 
     const {axiosClient}=client();
 
+    const store = useUserStore();
+
     const getTasks=async()=>{
         try{
             const response=await axiosClient.get('tasks');
             tasks.value=response;
         }
         catch(error){
+            if(error.response.status==401){
+                localStorage.clear();
+                store.updateUser();
+                router.push({name:'login'});
+            }
             console.log("error",error)
         }
      
@@ -29,6 +37,11 @@ export default function useTask(){
             task.value=response.data.task;
         }
         catch(error){
+            if(error.response.status==401){
+                localStorage.clear();
+                store.updateUser();
+                router.push({name:'login'});
+            }
             console.log("error",error)
         }
    
@@ -40,8 +53,16 @@ export default function useTask(){
             router.push({name:'tasks.index'});
         }
         catch(error){
-            errors.value=error.response.data.errors
-            console.log("error",error)
+            if(error.response.status==401){
+                localStorage.clear();
+                store.updateUser();
+                router.push({name:'login'});
+            }
+            else{
+                errors.value=error.response.data.errors
+                console.log("error",error)
+            }
+           
         }
     }
 
@@ -51,8 +72,16 @@ export default function useTask(){
             router.push({name:'tasks.index'});
         }
         catch(error){
-            errors.value=error.response.data.errors
-            console.log("error",error)
+            if(error.response.status==401){
+                localStorage.clear();
+                store.updateUser();
+                router.push({name:'login'});
+            }
+            else{
+                errors.value=error.response.data.errors
+                console.log("error",error)
+            }
+           
         }
     }
 
@@ -62,14 +91,21 @@ export default function useTask(){
             router.push({name:'tasks.index'});
         }
         catch(error){
-            console.log("error data",error.data)
+            if(error.response.status==401){
+                localStorage.clear();
+                store.updateUser();
+                router.push({name:'login'});
+            }
+            else{
+                console.log("error data",error.response.data)
+            }
+            
         }
     }
 
     return {
         tasks,
         task,
-        membres,
         getTasks,
         getTask,
         saveTask,

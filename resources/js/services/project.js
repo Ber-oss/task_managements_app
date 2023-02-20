@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import client from "../axios/index";
+import { useUserStore } from '../store/userStore';
 
 
 export default function useProject(){
@@ -13,12 +14,19 @@ export default function useProject(){
 
     const {axiosClient}=client();
 
+    const store = useUserStore();
+
     const getProjects=async()=>{
         try{
             const response=await axiosClient.get('projects');
             projects.value=response;
         }
         catch(error){
+            if(error.response.status==401){
+                localStorage.clear();
+                store.updateUser();
+                router.push({name:'login'});
+            }
             console.log("error",error)
         }
      
@@ -31,6 +39,11 @@ export default function useProject(){
             membres.value=response.data.membres;
         }
         catch(error){
+            if(error.response.status==401){
+                localStorage.clear();
+                store.updateUser();
+                router.push({name:'login'});
+            }
             console.log("error",error)
         }
    
@@ -42,8 +55,16 @@ export default function useProject(){
             router.push({name:'projects.index'});
         }
         catch(error){
-            errors.value=error.response.data.errors
-            console.log("error",error)
+            if(error.response.status==401){
+                localStorage.clear();
+                store.updateUser();
+                router.push({name:'login'});
+            }
+            else{
+                errors.value=error.response.data.errors
+                console.log("error",error)
+            }
+           
         }
     }
 
@@ -53,8 +74,16 @@ export default function useProject(){
             router.push({name:'projects.index'});
         }
         catch(error){
-            errors.value=error.response.data.errors
-            console.log("error",error)
+            if(error.response.status==401){
+                localStorage.clear();
+                store.updateUser();
+                router.push({name:'login'});
+            }
+            else{
+                errors.value=error.response.data.errors
+                console.log("error",error)
+            }
+           
         }
     }
 
@@ -64,7 +93,15 @@ export default function useProject(){
             router.push({name:'projects.index'});
         }
         catch(error){
-            console.log("error data",error.data)
+            if(error.response.status==401){
+                localStorage.clear();
+                store.updateUser();
+                router.push({name:'login'});
+            }
+            else{
+                console.log("error data",error.data)
+            }
+            
         }
     }
 
