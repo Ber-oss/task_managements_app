@@ -47,7 +47,6 @@ export default {
 
         const save=async()=>{
             await saveProject(form);
-            console.log("err",errors.value)
         }
 
         return{
@@ -60,4 +59,3 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>

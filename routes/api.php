@@ -35,6 +35,10 @@ Route::group([
     'middleware' => 'auth',
 ], function () {
     Route::apiResource('projects',ProjectController::class);
-    Route::apiResource('tasks',ProjectController::class);
+    Route::apiResource('tasks',TaskController::class);
 });
+
+Route::post('projects/getData',[ProjectController::class,'getData']);
+
+
 

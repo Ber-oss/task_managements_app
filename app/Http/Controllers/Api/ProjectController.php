@@ -14,7 +14,14 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return ['projects'=>Project::all()];
+        $projects=Project::with('creator','tasks')->orderBy('created_at','desc');
+        return datatables($projects)->toJson();
+        // return ['projects'=>Project::all()];
+    }
+
+    public function getData(){
+        $projects=Project::with('creator','tasks')->orderBy('created_at','desc');
+        return datatables($projects)->toJson();
     }
 
     /**
