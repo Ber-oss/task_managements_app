@@ -33,16 +33,24 @@ class Project extends Model
     }
 
     /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
+    /**
      * relationships
     */
     public function tasks(){
         return $this->hasMany(Task::class);
     }
 
-    public function creator(){
-        return $this->belongsTo(User::class)->withDefault();
-    }
-
-
-   
+    public function user(){
+        return $this->belongsTo(User::class)->withDefault([
+            'name'=>'',
+            'email'=>''
+        ]);
+    } 
 }

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\User;
+use App\Models\Project;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectRequest;
-use Illuminate\Http\Request;
-use App\Models\Project;
 
 class ProjectController extends Controller
 {
@@ -14,13 +15,13 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects=Project::with('creator','tasks')->orderBy('created_at','desc');
-        return datatables($projects)->toJson();
-        // return ['projects'=>Project::all()];
+        return response()->json([
+            'projects'=>Project::with('creator','tasks')->get()
+        ]);
     }
 
     public function getData(){
-        $projects=Project::with('creator','tasks')->orderBy('created_at','desc');
+        $projects=Project::with(['user','tasks'])->orderBy('created_at','desc');
         return datatables($projects)->toJson();
     }
 
@@ -49,7 +50,8 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         return response()->json([
-            'project'=>$project->load(['creator','tasks'])
+            'project'=>$project->load(['user','tasks']),
+            'membres'=>User::whereRelation('tasks.project','id',$project->id)->get()
         ]);
     }
 

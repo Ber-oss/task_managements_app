@@ -9,7 +9,7 @@ export default function client(){
     })
     
     axiosClient.interceptors.request.use(config => {
-        config.headers.Authorization = `Bearer ${localStorage.getItem('token')|| ''}`
+        config.headers.Authorization = `Bearer ${store.user.token}`
         return config;
     })
 

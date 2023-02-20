@@ -1,11 +1,15 @@
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import client from "../axios/index";
-import router from "../router";
+
 
 export default function useProject(){
     const projects=ref([]);
     const project=ref({});
+    const membres=ref([]);
     const errors=ref({});
+
+    const router=useRouter();
 
     const {axiosClient}=client();
 
@@ -24,6 +28,7 @@ export default function useProject(){
         try{
             const response=await axiosClient.get(`projects/${id}`);
             project.value=response.data.project;
+            membres.value=response.data.membres;
         }
         catch(error){
             console.log("error",error)
@@ -66,6 +71,7 @@ export default function useProject(){
     return {
         projects,
         project,
+        membres,
         getProjects,
         getProject,
         saveProject,

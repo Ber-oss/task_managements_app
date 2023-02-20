@@ -48,69 +48,23 @@
             <div class="table-responsive">
                 <DataTable
                     :options="options"
-                >
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>description</th>
-                        <th>date</th>
-                    </tr>
-                </thead>
-                </DataTable>
-                <!-- <DataTable
+                    ref="dt"
                     class="table table-bordered"
-                    id="dataTable"
-                    width="100%"
-                    cellspacing="0"
-                >
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Position</th>
-                            <th>Office</th>
-                            <th>Age</th>
-                            <th>Start date</th>
-                            <th>Salary</th>
-                        </tr>
-                    </thead>
-                   
-                    <tbody>
-                        <tr>
-                            <td>Tiger Nixon</td>
-                            <td>System Architect</td>
-                            <td>Edinburgh</td>
-                            <td>61</td>
-                            <td>2011/04/25</td>
-                            <td>$320,800</td>
-                        </tr>
-                        <tr>
-                            <td>Garrett Winters</td>
-                            <td>Accountant</td>
-                            <td>Tokyo</td>
-                            <td>63</td>
-                            <td>2011/07/25</td>
-                            <td>$170,750</td>
-                        </tr>
-                        <tr>
-                            <td>Ashton Cox</td>
-                            <td>Junior Technical Author</td>
-                            <td>San Francisco</td>
-                            <td>66</td>
-                            <td>2009/01/12</td>
-                            <td>$86,000</td>
-                        </tr>          
-                    </tbody>
-                </DataTable> -->
+                />
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { useUserStore } from '../../store/userStore';
+import project_datatable from '../../services/datatables/project-datatable';
 import DataTable from 'datatables.net-vue3';
 import DataTablesLib from 'datatables.net';
 import 'datatables.net-responsive-dt'
+
+import {ref,onMounted} from "vue"
+
+import { useRouter } from 'vue-router';
 
 
 DataTable.use(DataTablesLib);
@@ -121,50 +75,30 @@ export default {
         DataTable
     },
 
-    setup(){
-        const store = useUserStore();
-        const options={
-            responsive: true,
+    setup(){    
+        const {options}=project_datatable()
+        const dt=ref(null)
 
-            processing: true,
-            serverSide: true,
+        const router=useRouter();
 
-            ajax: {
-                url: "/api/projects/getData",
-                type: 'post',
-                dataSrc: 'data', 
-                headers: {
-                    Authorization: `Bearer: ${store.user.token}`
-                },
-            },
-
-            orderCellsTop: true,
-            fixedHeader: true,
-           
-            columns: [
-                {
-                    targets: 0,
-                    title: 'Name',
-                    data: 'name',
-                },
-                {
-                    targets: 1,
-                    title: 'Description',
-                    data: 'description',
-                    render: function (data, type, row, meta) {
-                        return row.description.slice(0, 50)+'...'
-                    }
-                },
-                {
-                    targets: 2,
-                    title: 'Date',
-                    data: 'created_at',
-                }
-            ]
-        }
+        onMounted(()=>{
+            $(dt.value.dt().table().body()).on('click', '.btn-show', function () {
+                let slug=this.getAttribute('data-slug')
+                router.push({name:'projects.show',params:{slug}})
+            });
+            $(dt.value.dt().table().body()).on('click', '.btn-edit', function () {
+                let slug=this.getAttribute('data-slug')
+                router.push({name:'projects.edit',params:{slug}})
+            });
+            // $(dt.value.dt().table().body()).on('click', '.btn-delete', function () {
+            //     let slug=this.getAttribute('data-slug')
+            //     router.push({name:'projects.show',params:{slug}})
+            // });
+        })
 
         return {
-            options
+            options,
+            dt
         }
     }
 };

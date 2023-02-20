@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,6 @@ Route::group([
 });
 
 Route::post('projects/getData',[ProjectController::class,'getData']);
-
+Route::post('tasks/getData',[TaskController::class,'getData']);
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -14,6 +15,11 @@ class TaskController extends Controller
     public function index(): Response
     {
         //
+    }
+
+    public function getData(){
+        $tasks=Task::orderBy('created_at','desc');
+        return datatables($tasks)->toJson();
     }
 
     /**

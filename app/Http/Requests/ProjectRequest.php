@@ -23,8 +23,9 @@ class ProjectRequest extends FormRequest
      */
     public function rules(): array
     {
+        
         $unique_rule=$this->route('project')
-        ?Rule::unique('projects')->ignore($this->route('project'))
+        ?Rule::unique('projects')->ignore($this->route('project')['id'])
         :Rule::unique('projects');
 
         $unique_rule=$unique_rule ->where(function ($query){

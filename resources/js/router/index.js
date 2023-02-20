@@ -6,6 +6,8 @@ import LoginPage from '../pages/LoginPage.vue'
 import DashboardPage from '../pages/DashboardPage.vue'
 import ProjectIndex from '../pages/projects/ProjectIndex.vue'
 import ProjectCreate from '../pages/projects/ProjectCreate.vue'
+import ProjectShow from '../pages/projects/ProjectShow.vue'
+import ProjectEdit from '../pages/projects/ProjectEdit.vue'
 import TaskIndex from '../pages/tasks/TaskIndex.vue'
 
 const routes=[
@@ -31,9 +33,27 @@ const routes=[
                 'component':ProjectCreate
             },
             {
+                'path':'/projects/details/:slug',
+                'name':'projects.show',
+                'component':ProjectShow,
+                'props':true
+            },
+            {
+                'path':'/projects/edit/:slug',
+                'name':'projects.edit',
+                'component':ProjectEdit,
+                'props':true
+            },
+            {
                 'path':'/tasks',
                 'name':'tasks.index',
                 'component':TaskIndex
+            },
+            {
+                'path':'/tasks/create/:project_id?',
+                'name':'tasks.create',
+                'component':TaskIndex,
+                "props":true
             },
         ]
     },
