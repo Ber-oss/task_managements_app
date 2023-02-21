@@ -33,7 +33,7 @@ export default function project_datatable(){
                 title: 'Description',
                 data: 'description',
                 render: function (data, type, row, meta) {
-                    return row.description?row.description.slice(0, 50):'--'
+                    return row.description?row.description.slice(0, 50)+'...':'--'
                 }
             },
             {

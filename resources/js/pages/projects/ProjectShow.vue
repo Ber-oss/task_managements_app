@@ -19,6 +19,13 @@
                 <hr>
                 <h4>By: </h4>
                 <p v-if="project.user">{{ project.user.name }}</p>
+                <hr>
+                <h4>Status <span
+                    class="float-right">{{project.progress}}%</span></h4>
+                <div class="progress mb-4">
+                    <div class="progress-bar" role="progressbar" :style="{ width: `${project.progress}%`}"
+                        :aria-valuenow="project.progress" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -28,11 +35,11 @@
                 <h6 class="m-0 font-weight-bold text-primary">Team</h6>
             </div>
             <div class="card-body">
-                <template v-if="project.tasks">
-                    <h4  v-for="membre in project.tasks.map(i=>{i.members}).flat()" :key="membre.id" class="small font-weight-bold">{{ membre.name }} </h4>
+                <template v-if="members.length">
+                    <h5  v-for="membre in members" :key="membre.id" class="font-weight-bold">- {{ membre.name }} </h5>
                 </template>
                 <div v-else>
-                    No tasks created for this project
+                    no members have been added
                 </div>
             </div>
         </div>
@@ -62,7 +69,7 @@
 
 <script>
 
-import {onMounted,ref} from 'vue';
+import {onMounted,ref,computed} from 'vue';
 import useProject from '../../services/project';
 import useTask from '../../services/task';
 
@@ -96,11 +103,13 @@ export default {
 
         const router=useRouter();
 
+        const members=computed(()=>{
+            return project.value.tasks?project.value.tasks.map(item=>item.members).flat():[]
+        });
+
         onMounted(async ()=>{
             await getProject(props.slug);
-            const {tasks}={...project.value}
-
-            console.log(tasks.map(i=>{i.members}))
+         
             $(dt.value.dt().table().body()).on('click', '.btn-show', function () {
                 let task_slug=this.getAttribute('data-slug')
                 router.push({name:'tasks.show',params:{slug:task_slug,project_slug:props.slug}})
@@ -127,6 +136,7 @@ export default {
         return{
             project,
             options,
+            members,
             dt
         }
        

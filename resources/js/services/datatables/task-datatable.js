@@ -34,7 +34,7 @@ export default function task_datatable(project_slug=''){
                 title: 'Description',
                 data: 'description',
                 render: function (data, type, row, meta) {
-                    return row.description?row.description.slice(0, 50):'--'
+                    return row.description?row.description.slice(0, 50)+'...':'--'
                 }
             },
             {
@@ -48,7 +48,12 @@ export default function task_datatable(project_slug=''){
             {
                 targets: 3,
                 title: 'End date',
-                data: 'end_date',
+                data: 'end_date'
+            },
+            {
+                targets: 3,
+                title: 'Status',
+                data: 'status',
                 render: function (data, type, row, meta) {
                     const status={
                         'pending':'warning',
@@ -58,15 +63,6 @@ export default function task_datatable(project_slug=''){
                         
                     
                     return `<span class='badge badge-${status[row.status]}'>${row.status}</span>`
-                }
-            },
-            {
-                targets: 3,
-                title: 'Status',
-                data: 'status',
-                render: function (data, type, row, meta) {
-                    'pending','processing','completed'
-                    return row.status
                 }
             },
             {

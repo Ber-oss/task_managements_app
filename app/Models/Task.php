@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class Task extends Model
 {
-    use HasFactory;
+    use HasFactory,Sluggable;
 
     protected $fillable=[
         'name',
@@ -30,11 +31,20 @@ class Task extends Model
     /**
      * closure that save task's slug
     */
-    protected static function booted(): void
+    // protected static function booted(): void
+    // {
+    //     static::creating(function (Task $task) {
+    //         $task->slug=Str::slug($task->name);
+    //     });
+    // }
+
+    public function sluggable(): array
     {
-        static::creating(function (Task $task) {
-            $task->slug=Str::slug($task->name);
-        });
+        return [
+            'slug' => [
+                'source' => 'name',
+            ]
+        ];
     }
 
     /**

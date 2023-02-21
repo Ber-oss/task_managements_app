@@ -198,6 +198,8 @@ return [
 
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
+        Cviebrock\EloquentSluggable\ServiceProvider::class
+        
 
     ],
 

@@ -36,7 +36,14 @@
                 <div class="form-group">
                     <label>Membres</label>
                     <v-select :options="users" @input="searchUser" v-model="form.members" multiple @close="selectClosed" :selectable="option => option.value"></v-select>
-                    
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select class="form-control" v-model="form.status">
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="completed">Completed</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <button type="submit">Save</button>
@@ -77,6 +84,7 @@ export default {
             description:'',
             start_date:'',
             end_date:'',
+            status:'',
             project_slug:props.project_slug,
             members:[]
         })
@@ -88,6 +96,7 @@ export default {
             form.description=task.value.description
             form.start_date=task.value.start_date
             form.end_date=task.value.end_date
+            form.status=task.value.status
             form.members=task.value.members.map(i=>{
                 return {
                     value:i.id,

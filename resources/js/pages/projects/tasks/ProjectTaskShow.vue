@@ -30,7 +30,7 @@
                 <h6 class="m-0 font-weight-bold text-primary">Members</h6>
             </div>
             <div class="card-body"> 
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table v-if="task.members && task.members.length" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -44,6 +44,9 @@
                         </tr>
                     </tbody>
                 </table>
+                <div v-else>
+                    no members have been added
+                </div>
             </div>
         </div>
     </div>   
