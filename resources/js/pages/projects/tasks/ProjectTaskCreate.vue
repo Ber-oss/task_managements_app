@@ -39,7 +39,7 @@
                     
                 </div>
                 <div class="form-group">
-                    <button type="submit">Save</button>
+                    <button type="submit" class="btn btn-primary btn-block">Save</button>
                 </div>
             </form>
         </div>
@@ -56,9 +56,12 @@ import useTask from '../../../services/task';
 
 import client from "../../../axios/index";
 
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
+
 export default {
     components:{
-        vSelect
+        vSelect,
+        PulseLoader
     },
 
     props:['project_slug'],
@@ -66,7 +69,7 @@ export default {
     setup(props){
         const {axiosClient}=client();
 
-        const {saveTask,errors}=useTask();
+        const {saveTask,errors,loading}=useTask();
 
         const form=reactive({
             name:'',

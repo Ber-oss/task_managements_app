@@ -44,9 +44,10 @@
                         <option value="processing">Processing</option>
                         <option value="completed">Completed</option>
                     </select>
+                    <span class="text-danger" v-if="errors && errors.status">{{ errors.status[0] }}</span>
                 </div>
                 <div class="form-group">
-                    <button type="submit">Save</button>
+                    <button type="submit" class="btn btn-primary btn-block">Save</button>
                 </div>
             </form>
         </div>

@@ -4,6 +4,7 @@ import { useUserStore } from '../store/userStore'
 
 import LoginPage from '../pages/LoginPage.vue'
 import DashboardPage from '../pages/DashboardPage.vue'
+import ProfilePage from '../pages/ProfilePage.vue'
 import ProjectIndex from '../pages/projects/ProjectIndex.vue'
 import ProjectCreate from '../pages/projects/ProjectCreate.vue'
 import ProjectShow from '../pages/projects/ProjectShow.vue'
@@ -17,7 +18,8 @@ const routes=[
     {
         'path':'/login',
         'name':'login',
-        'component':LoginPage
+        'component':LoginPage,
+        'meta': {requiresAuth: false},
     },
     {
         'path':'/',
@@ -25,6 +27,11 @@ const routes=[
         'component':DashboardPage,
         'meta': {requiresAuth: true},
         'children':[
+            {
+                'path':'/profile',
+                'name':'profile',
+                'component':ProfilePage
+            },
             {
                 'path':'/projects',
                 'name':'projects.index',
@@ -84,6 +91,10 @@ router.beforeEach((to, from, next) => {
     const store = useUserStore()
     if (to.meta.requiresAuth && !store.user.token) {
         next({name: 'login'});
+    } 
+
+    else if (!to.meta.requiresAuth && store.user.token) {
+        next({name:'dashboard'});
     } else {
         next();
     }

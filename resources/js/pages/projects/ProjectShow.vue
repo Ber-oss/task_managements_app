@@ -20,8 +20,8 @@
                 <h4>By: </h4>
                 <p v-if="project.user">{{ project.user.name }}</p>
                 <hr>
-                <h4>Status <span
-                    class="float-right">{{project.progress}}%</span></h4>
+                <h4>Status <span v-if="project.progress"
+                    class="float-right">{{project.progress.toFixed(2)}}%</span></h4>
                 <div class="progress mb-4">
                     <div class="progress-bar" role="progressbar" :style="{ width: `${project.progress}%`}"
                         :aria-valuenow="project.progress" aria-valuemin="0" aria-valuemax="100"></div>
@@ -73,7 +73,6 @@ import {onMounted,ref,computed} from 'vue';
 import useProject from '../../services/project';
 import useTask from '../../services/task';
 
-import { useToast } from "vue-toastification";
 
 import task_datatable from '../../services/datatables/task-datatable';
 import DataTable from 'datatables.net-vue3';
@@ -97,14 +96,16 @@ export default {
         const {deleteTask}=useTask();
         const {options}=task_datatable(props.slug);
 
-        const toast = useToast();
-
         const dt=ref(null)
 
         const router=useRouter();
 
         const members=computed(()=>{
-            return project.value.tasks?project.value.tasks.map(item=>item.members).flat():[]
+            let members=project.value.tasks?project.value.tasks.map(item=>item.members).flat():[];
+          
+            members=members.filter((item,index) => members.indexOf(members.find(it=>it.id==item.id)) === index)
+            
+            return members;
         });
 
         onMounted(async ()=>{
@@ -123,15 +124,11 @@ export default {
                 if(confirm('Do you want to delete this task?')){
                     deleteTask(slug).then(()=>{
                         dt.value.dt().table().ajax.reload();
-                        toast.success("Task deleted", {
-                            timeout: 2000
-                        });
                     })            
                 }  
             });
         })
-
-        
+    
 
         return{
             project,

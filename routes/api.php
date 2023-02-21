@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\TaskController;
+use App\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,9 @@ Route::group([
 ], function () {
     Route::apiResource('projects',ProjectController::class);
     Route::apiResource('tasks',TaskController::class);
+    Route::apiResource('users',UserController::class);
+
+    Route::post('users/{user}/profile',[UserController::class,'updateProfile']);
 });
 
 Route::post('projects/getData',[ProjectController::class,'getData']);

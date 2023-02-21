@@ -2,13 +2,16 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import client from "../axios/index";
 import { useUserStore } from '../store/userStore';
-
+import { useToast } from "vue-toastification";
 
 export default function useTask(){
     const tasks=ref([]);
     const task=ref({});
     const errors=ref({});
 
+    const toast = useToast();
+
+    
     const router=useRouter();
 
     const {axiosClient}=client();
@@ -50,6 +53,11 @@ export default function useTask(){
     const saveTask=async (data,toProjectShow=false)=>{
         try{
             await axiosClient.post('tasks',data);
+
+            toast.success("Task created", {
+                timeout: 2000
+            });
+
             if(toProjectShow){
                 router.push({name:'projects.show',params:{slug:data.project_slug}});
             }
@@ -75,6 +83,11 @@ export default function useTask(){
     const updateTask=async (id,data,toProjectShow=false)=>{
         try{
             await axiosClient.patch(`tasks/${id}`,data);
+
+            toast.success("Task updated", {
+                timeout: 2000
+            });
+
             if(toProjectShow){
                 router.push({name:'projects.show',params:{slug:data.project_slug}});
             }
@@ -99,6 +112,9 @@ export default function useTask(){
     const deleteTask=async (id)=>{
         try{
             await axiosClient.delete(`tasks/${id}`);
+            toast.success("Task deleted", {
+                timeout: 2000
+            });
         }
         catch(error){
             if(error.response.status && error.response.status==401){

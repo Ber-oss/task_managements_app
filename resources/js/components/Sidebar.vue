@@ -40,6 +40,12 @@
         <span>Tasks</span></router-link
       >
     </li>
+    <li class="nav-item">
+      <router-link class="nav-link" :to="{name:'profile'}">
+        <i class="fas fa-fw fa-user"></i>
+        <span>Profile</span></router-link
+      >
+    </li>
   </ul>
 </template>
 

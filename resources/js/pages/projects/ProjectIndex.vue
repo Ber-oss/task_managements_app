@@ -68,7 +68,6 @@ import {ref,onMounted} from "vue"
 
 import { useRouter } from 'vue-router';
 
-import { useToast } from "vue-toastification";
 
 DataTable.use(DataTablesLib);
 
@@ -81,7 +80,7 @@ export default {
     setup(){    
         const {deleteProject}=useProject();
         const {options}=project_datatable();
-        const toast = useToast();
+        
 
         const dt=ref(null)
 
@@ -102,9 +101,6 @@ export default {
                 if(confirm('Do you want to delete this project?')){
                     deleteProject(slug).then(()=>{
                         dt.value.dt().table().ajax.reload();
-                        toast.success("Project deleted", {
-                            timeout: 2000
-                        });
                     })            
                 }              
             });

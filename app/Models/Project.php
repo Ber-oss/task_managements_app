@@ -73,7 +73,7 @@ class Project extends Model
     public function getProgressAttribute(){
         $completed_tasks= $this->tasks()->where('status','like','completed')->count();
         $total_task=$this->tasks()->count();
-        return ($completed_tasks/$total_task)*100;
+        return $total_task?($completed_tasks/$total_task)*100:$total_task;
     }
 
 }

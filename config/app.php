@@ -198,7 +198,8 @@ return [
 
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
-        Cviebrock\EloquentSluggable\ServiceProvider::class
+        Cviebrock\EloquentSluggable\ServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class
         
 
     ],
@@ -216,6 +217,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+        'Image' => Intervention\Image\Facades\Image::class
     ])->toArray(),
 
 ];

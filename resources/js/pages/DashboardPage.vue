@@ -281,11 +281,11 @@
                   aria-expanded="false"
                 >
                   <span class="mr-2 d-none d-lg-inline text-gray-600 small"
-                    >Douglas McGee</span
+                    >{{store.user.data.name}}</span
                   >
                   <img
                     class="img-profile rounded-circle"
-                    src="img/undraw_profile.svg"
+                    :src="store.user.avatar"
                   />
                 </a>
                 <!-- Dropdown - User Information -->
@@ -297,24 +297,16 @@
                   "
                   aria-labelledby="userDropdown"
                 >
-                  <a class="dropdown-item" href="#">
+                  <router-link class="dropdown-item" :to="{name:'profile'}">
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                     Profile
-                  </a>
-                  <a class="dropdown-item" href="#">
-                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Settings
-                  </a>
-                  <a class="dropdown-item" href="#">
-                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Activity Log
-                  </a>
+                  </router-link>
                   <div class="dropdown-divider"></div>
                   <a
                     class="dropdown-item"
                     href="#"
-                    data-toggle="modal"
-                    data-target="#logoutModal"
+                    
+                    @click.prevent="logout"
                   >
                     <i
                       class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"
@@ -342,14 +334,49 @@
   </template>
   
   <script>
+  // import {onMounted,computed} from "vue";
+
   import Sidebar from "../components/Sidebar.vue";
+
+  // import useUser from '../services/user';
+
+  import {useUserStore} from '../store/userStore';
+
+  import { useRouter } from "vue-router";
+
   export default {
     components: {
       Sidebar,
     },
+    
   
     setup() {
-      return {};
+      const store=useUserStore();
+
+      // const {user,getUser}=useUser();
+
+      const router=useRouter();
+
+
+      // const avatar=computed(()=>{
+      //     return store.user.data.profile.avatar_url?store.user.data.profile.avatar_url:'/avatars/default.png'
+      // })
+
+      // onMounted(async ()=>{
+      //     await getUser(store.user.data.id);
+      //     console.log(user.value)
+      // })
+
+      const logout=()=>{
+        localStorage.clear();
+        store.updateUser();
+        router.push({name:'login'});
+      }
+
+      return {
+        store,
+        logout
+      };
     },
   };
   </script>
