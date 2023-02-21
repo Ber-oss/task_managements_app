@@ -3,6 +3,7 @@ import {createRouter,createWebHistory} from 'vue-router';
 import { useUserStore } from '../store/userStore'
 
 import LoginPage from '../pages/LoginPage.vue'
+import Dashboard from '../pages/Dashboard.vue'
 import DashboardPage from '../pages/DashboardPage.vue'
 import ProfilePage from '../pages/ProfilePage.vue'
 import ProjectIndex from '../pages/projects/ProjectIndex.vue'
@@ -23,10 +24,15 @@ const routes=[
     },
     {
         'path':'/',
-        'name':'dashboard',
+        'name':'dashboard_page',
         'component':DashboardPage,
         'meta': {requiresAuth: true},
         'children':[
+            {
+                'path':'/',
+                'name':'dashboard',
+                'component':Dashboard
+            },
             {
                 'path':'/profile',
                 'name':'profile',
@@ -88,14 +94,17 @@ const router=createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const store = useUserStore()
+    const store = useUserStore();
+
     if (to.meta.requiresAuth && !store.user.token) {
         next({name: 'login'});
     } 
 
     else if (!to.meta.requiresAuth && store.user.token) {
         next({name:'dashboard'});
-    } else {
+    } 
+    
+    else {
         next();
     }
 });

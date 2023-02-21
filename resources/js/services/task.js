@@ -109,6 +109,30 @@ export default function useTask(){
         }
     }
 
+    const updateNote=async(slug,user_id,project_slug,data)=>{
+        try{
+            await axiosClient.patch(`tasks/note/${slug}/${user_id}`,data);
+
+            toast.success("Task updated", {
+                timeout: 2000
+            });
+            router.push({name:'projects.show',params:{slug:project_slug}});
+           
+        }
+        catch(error){
+            if(error.response.status && error.response.status==401){
+                localStorage.clear();
+                store.updateUser();
+                router.push({name:'login'});
+            }
+            else{
+                errors.value=error.response.data.errors
+                console.log("error",error)
+            }
+           
+        }
+    }
+
     const deleteTask=async (id)=>{
         try{
             await axiosClient.delete(`tasks/${id}`);
@@ -137,6 +161,7 @@ export default function useTask(){
         saveTask,
         updateTask,
         deleteTask,
+        updateNote,
         errors
     }
 

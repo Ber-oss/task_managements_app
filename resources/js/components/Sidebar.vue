@@ -9,7 +9,7 @@
       href="index.html"
     >
       <div class="sidebar-brand-icon rotate-n-15">
-        <i class="fas fa-laugh-wink"></i>
+        <i class="fas fa-folder"></i>
       </div>
       <div class="sidebar-brand-text mx-3">Tasks management</div>
     </a>
@@ -34,12 +34,12 @@
         <span>Projects</span></router-link
       >
     </li>
-    <li class="nav-item">
+    <!-- <li class="nav-item">
       <router-link class="nav-link" :to="{name:'tasks.index'}">
         <i class="fas fa-fw fa-table"></i>
         <span>Tasks</span></router-link
       >
-    </li>
+    </li> -->
     <li class="nav-item">
       <router-link class="nav-link" :to="{name:'profile'}">
         <i class="fas fa-fw fa-user"></i>

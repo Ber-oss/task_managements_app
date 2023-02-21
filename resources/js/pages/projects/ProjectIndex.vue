@@ -89,7 +89,8 @@ export default {
         onMounted(()=>{
             $(dt.value.dt().table().body()).on('click', '.btn-show', function () {
                 let slug=this.getAttribute('data-slug')
-                router.push({name:'projects.show',params:{slug}})
+                let id=this.getAttribute('data-id')
+                router.push({name:'projects.show',params:{slug,id}})
             });
             $(dt.value.dt().table().body()).on('click', '.btn-edit', function () {
                 let slug=this.getAttribute('data-slug')

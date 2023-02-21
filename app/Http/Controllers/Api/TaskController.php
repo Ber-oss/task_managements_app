@@ -25,19 +25,16 @@ class TaskController extends Controller
     }
 
     public function getData(Request $request){
-        $tasks="";
-        if($request->project_slug){
-            $project=Project::whereSlug($request->project_slug)->first();
-            $tasks=$project->tasks()
-            ->with(['project','members'])
-            ->orderBy('created_at','desc');
-        }
-        else{
-            $tasks=Task::with(['project','members'])
-            ->whereRelation('members','id',$request->user_id)
-            ->orderBy('created_at','desc');
-        }
-        
+      
+        $tasks=Task::with(['project','members'])
+        ->when($request->user_id,function($query) use ($request){
+            $query->orWhereRelation('members','id',$request->user_id);
+        })
+        ->when($request->project_slug,function($query) use ($request){
+            $query->orWhereRelation('project','slug',$request->project_slug);
+        })
+        ->orderBy('created_at','desc');
+         
         return datatables($tasks)->toJson();
     }
 
@@ -49,18 +46,20 @@ class TaskController extends Controller
         ]);
     }
 
-
     /**
      * Store a newly created resource in storage.
      */
     public function store(TaskRequest $request)
     {
-    
+        
         $data=$request->validated();
 
         $project=Project::whereSlug($request->project_slug)->firstOrFail();
         
-        
+        if (auth()->user()->cannot('create', $project)) {
+             return response()->json(['error' => 'Forbidden'], 403);
+        }
+
         DB::beginTransaction();
 
         try {
@@ -99,15 +98,17 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, Task $task)
     {
+        if (auth()->user()->cannot('update', $task)) {
+             return response()->json(['error' => 'Forbidden'], 403);
+        }
+
         DB::beginTransaction();
 
         try {
             $task->update($request->validated());
-            if($request->members){
-                $task->members()->sync($request->members);
-            }
+           
+            $task->members()->sync($request->members);
             
-
             DB::commit();
 
         } catch (Throwable $e) {
@@ -125,10 +126,30 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
+        if (auth()->user()->cannot('delete', $task)) {
+             return response()->json(['error' => 'Forbidden'], 403);
+        }
+
         $task->delete();
 
         return response()->json([
             'message'=>'Task deleted successfully'
         ]);
+    }
+
+    public function updateNote(Request $request,Task $task,$user_id){
+        $task->members()->updateExistingPivot($user_id, [
+            'note' => $request->note,
+        ]);
+
+        $task->update([
+            'status'=>$request->status
+        ]);
+
+        return response()->json([
+            'message'=>'Note and status upated succesfully'
+        ]);
+        
+        
     }
 }

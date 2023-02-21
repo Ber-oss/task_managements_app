@@ -4,6 +4,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\UserController;
@@ -36,11 +37,14 @@ Route::group([
 Route::group([
     'middleware' => 'auth',
 ], function () {
+    Route::get('statistics',[DashboardController::class,'statistics']);
+
+    Route::post('users/{user}/profile',[UserController::class,'updateProfile']);
+    Route::patch('tasks/note/{task}/{user}',[TaskController::class,'updateNote']);
+
     Route::apiResource('projects',ProjectController::class);
     Route::apiResource('tasks',TaskController::class);
     Route::apiResource('users',UserController::class);
-
-    Route::post('users/{user}/profile',[UserController::class,'updateProfile']);
 });
 
 Route::post('projects/getData',[ProjectController::class,'getData']);

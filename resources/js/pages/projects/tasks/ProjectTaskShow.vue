@@ -50,35 +50,84 @@
             </div>
         </div>
     </div>   
+    <div class='col-12 mt-2' v-if="task.members">
+        <div  v-if="task.members.map(i=>i.id).includes(user.data.id)">
+            <div class="card shadow mb-4 h-100">
+                <div class="card-body">
+                    <form action="" @submit.prevent="save">
+                        <div class="form-group">
+                            <label for="name">Note</label>
+                            <textarea type="text" v-model="form.note" id="note" class="form-control" placeholder="Note"></textarea>
+                            <span class="text-danger" v-if="errors && errors.note">{{ errors.note[0] }}</span>
+                        </div>
+                        <div class="form-group mt-2">
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select class="form-control" v-model="form.status">
+                                    <option value="pending">Pending</option>
+                                    <option value="processing">Processing</option>
+                                    <option value="completed">Completed</option>
+                                </select>
+                                <span class="text-danger" v-if="errors && errors.status">{{ errors.status[0] }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block">Save</button>
+                        </div>
+                    </form> 
+                </div>
+            </div>   
+        </div>
+    </div>
+    
+    
+    
    </div>
   
 </template>
 
 <script>
 
-import {onMounted,ref} from 'vue';
+import {onMounted,reactive} from 'vue';
 import useTask from '../../../services/task';
-
+import {useUserStore} from '../../../store/userStore';
 export default {
 
     props:['slug','project_slug'],
 
     setup(props){
-        const {task,getTask}=useTask();
+        const {task,getTask,updateNote}=useTask();
+
+        const {user}=useUserStore();
 
         const statusColor={
             'pending':'warning',
             'processing':'primary',
             'completed':'success'
         };
+
+        const form=reactive({
+            note:'',
+            status:''
+        })
+
+        const save=async()=>{
+            await updateNote(props.slug,user.data.id,props.project_slug,form);
+        }
         
         onMounted(async()=>{
             await getTask(props.slug);
+            form.note=task.value.members?task.value.members.find(i=>i.id==user.data.id).pivot.note:'';
+            form.status=task.value.status;
         })
 
         return{
             task,
-            statusColor
+            statusColor,
+            user,
+            form,
+            save
         }
        
     }

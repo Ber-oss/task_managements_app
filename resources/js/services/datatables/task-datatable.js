@@ -2,7 +2,7 @@ import { useUserStore } from '../../store/userStore';
 export default function task_datatable(project_slug=''){
     const store = useUserStore();
     const options={
-        responsive: true,
+        // responsive: true,
 
         processing: true,
         serverSide: true,
@@ -13,7 +13,6 @@ export default function task_datatable(project_slug=''){
             dataSrc: 'data', 
             data:{
                 project_slug,
-                user_id:store.user.data.id
             },
             headers: {
                 Authorization: `Bearer: ${store.user.token}`
@@ -76,7 +75,7 @@ export default function task_datatable(project_slug=''){
                 data:'slug',
                 "orderable": false,
                 render: function (data, type, row, meta) {
-                    return `
+                    return store.user.data.id==row.project.user_id?`
                         <div class="d-flex">                       
                             <a href="javascript:0;" data-slug=${row.slug}  class="btn btn-sm btn-default btn-text-primary btn-hover-primary btn-icon mr-2 btn-show" title="Details">
                                     <i class="fas fa-eye text-primary"></i>
@@ -86,12 +85,19 @@ export default function task_datatable(project_slug=''){
                                 <i class="fas fa-pen text-success"></i>
                             </a>
                         
-            
                             <a href="javascript:0;" data-slug=${row.slug} class="btn btn-sm btn-clean btn-icon btn-delete" title="Delete">
                                 <i class="fas fa-trash text-danger"></i>
                             </a>
                     
-                        </div>`;
+                        </div>`:
+                        `
+                        <div class="d-flex">                       
+                            <a href="javascript:0;" data-slug=${row.slug}  class="btn btn-sm btn-primary btn-text-primary btn-hover-primary btn-icon mr-2 btn-show" title="Details">
+                                <i class="fas fa-eye text-white"></i> Details
+                            </a>   
+                        </div>`
+
+                        ;
                 }
             }
         ]

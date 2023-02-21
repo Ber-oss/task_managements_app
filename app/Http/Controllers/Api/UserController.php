@@ -67,6 +67,11 @@ class UserController extends Controller
     }
 
     public function updateProfile(ProfileRequest $request,User $user){
+        
+        if (auth()->user()->cannot('update', $user)) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+
         $data=$request->validated();
 
         if($request->avatar){

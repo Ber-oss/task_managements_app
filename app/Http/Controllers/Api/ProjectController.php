@@ -25,6 +25,7 @@ class ProjectController extends Controller
         ->whereRelation('tasks.members','id',$request->user_id)
         ->orWhere('user_id',$request->user_id)
         ->orderBy('created_at','desc');
+        
         return datatables($projects)->toJson();
     }
 
@@ -62,6 +63,10 @@ class ProjectController extends Controller
      */
     public function update(ProjectRequest $request, Project $project)
     {
+        if (auth()->user()->cannot('update', $project)) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+
         $data=$request->validated();
 
         $project->update([
@@ -80,6 +85,10 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        if (auth()->user()->cannot('delete', $project)) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+
         $project->delete();
 
         return response()->json([

@@ -2,7 +2,7 @@ import { useUserStore } from '../../store/userStore';
 export default function project_datatable(){
     const store = useUserStore();
     const options={
-        responsive: true,
+        // responsive: true,
 
         processing: true,
         serverSide: true,
@@ -52,7 +52,7 @@ export default function project_datatable(){
                 data:'slug',
                 "orderable": false,
                 render: function (data, type, row, meta) {
-                    return `
+                    return store.user.data.id==row.user_id?`
                         <div class="d-flex">                       
                             <a href="javascript:0;" data-slug=${row.slug}  class="btn btn-sm btn-default btn-text-primary btn-hover-primary btn-icon mr-2 btn-show" title="Details">
                                     <i class="fas fa-eye text-primary"></i>
@@ -62,11 +62,16 @@ export default function project_datatable(){
                                 <i class="fas fa-pen text-success"></i>
                             </a>
                         
-            
                             <a href="javascript:0;" data-slug=${row.slug} class="btn btn-sm btn-clean btn-icon btn-delete" title="Delete">
                                 <i class="fas fa-trash text-danger"></i>
                             </a>
                     
+                        </div>`:
+                        `
+                        <div class="d-flex">                       
+                            <a href="javascript:0;" data-slug=${row.slug}  class="btn btn-sm btn-primary btn-text-primary btn-hover-primary btn-icon mr-2 btn-show" title="Details">
+                                    <i class="fas fa-eye text-white"></i> Details
+                            </a>   
                         </div>`;
                 }
             }
