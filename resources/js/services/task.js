@@ -21,7 +21,7 @@ export default function useTask(){
             tasks.value=response;
         }
         catch(error){
-            if(error.response.status==401){
+            if(error.response.status && error.response.status==401){
                 localStorage.clear();
                 store.updateUser();
                 router.push({name:'login'});
@@ -37,7 +37,7 @@ export default function useTask(){
             task.value=response.data.task;
         }
         catch(error){
-            if(error.response.status==401){
+            if(error.response.status && error.response.status==401){
                 localStorage.clear();
                 store.updateUser();
                 router.push({name:'login'});
@@ -47,13 +47,19 @@ export default function useTask(){
    
     }
 
-    const saveTask=async (data)=>{
+    const saveTask=async (data,toProjectShow=false)=>{
         try{
             await axiosClient.post('tasks',data);
-            router.push({name:'tasks.index'});
+            if(toProjectShow){
+                router.push({name:'projects.show',params:{slug:data.project_slug}});
+            }
+            else{
+                router.push({name:'tasks.index'});
+            }
+           
         }
         catch(error){
-            if(error.response.status==401){
+            if(error.response.status && error.response.status==401){
                 localStorage.clear();
                 store.updateUser();
                 router.push({name:'login'});
@@ -66,13 +72,18 @@ export default function useTask(){
         }
     }
 
-    const updateTask=async (id,data)=>{
+    const updateTask=async (id,data,toProjectShow=false)=>{
         try{
             await axiosClient.patch(`tasks/${id}`,data);
-            router.push({name:'tasks.index'});
+            if(toProjectShow){
+                router.push({name:'projects.show',params:{slug:data.project_slug}});
+            }
+            else{
+                router.push({name:'tasks.index'});
+            }
         }
         catch(error){
-            if(error.response.status==401){
+            if(error.response.status && error.response.status==401){
                 localStorage.clear();
                 store.updateUser();
                 router.push({name:'login'});
@@ -88,10 +99,9 @@ export default function useTask(){
     const deleteTask=async (id)=>{
         try{
             await axiosClient.delete(`tasks/${id}`);
-            router.push({name:'tasks.index'});
         }
         catch(error){
-            if(error.response.status==401){
+            if(error.response.status && error.response.status==401){
                 localStorage.clear();
                 store.updateUser();
                 router.push({name:'login'});

@@ -28,9 +28,8 @@
                 <h6 class="m-0 font-weight-bold text-primary">Team</h6>
             </div>
             <div class="card-body">
-                <template v-if="membre">
-                    <h4  v-for="membre in membres" :key="membre.id" class="small font-weight-bold">{{ membre.name }} <span
-                        class="float-right">20%</span></h4>
+                <template v-if="project.tasks">
+                    <h4  v-for="membre in project.tasks.map(i=>{i.members}).flat()" :key="membre.id" class="small font-weight-bold">{{ membre.name }} </h4>
                 </template>
                 <div v-else>
                     No tasks created for this project
@@ -42,7 +41,7 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Tasks</h6>
-                <router-link :to="{name:'tasks.create',params:{project_id:project.id}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                <router-link :to="{name:'tasks.create',params:{project_slug:project.slug}}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                 class="fas fa-plus fa-sm text-white-50"></i> Create task</router-link>
                 </div>
             <div class="card-body">
@@ -65,16 +64,19 @@
 
 import {onMounted,ref} from 'vue';
 import useProject from '../../services/project';
+import useTask from '../../services/task';
 
+import { useToast } from "vue-toastification";
 
 import task_datatable from '../../services/datatables/task-datatable';
 import DataTable from 'datatables.net-vue3';
 import DataTablesLib from 'datatables.net';
+
 import 'datatables.net-responsive-dt'
 
 import { useRouter } from 'vue-router';
 
-DataTable.use(DataTablesLib);
+DataTable.use(DataTablesLib)
 
 export default {
     components:{
@@ -84,36 +86,46 @@ export default {
     props:['slug'],
 
     setup(props){
-        const {project,membres,getProject}=useProject();
-        const {options}=task_datatable();
+        const {project,getProject}=useProject();
+        const {deleteTask}=useTask();
+        const {options}=task_datatable(props.slug);
+
+        const toast = useToast();
 
         const dt=ref(null)
 
         const router=useRouter();
 
-        onMounted(()=>{
-            console.log("dt",dt.value.dt())
+        onMounted(async ()=>{
+            await getProject(props.slug);
+            const {tasks}={...project.value}
+
+            console.log(tasks.map(i=>{i.members}))
             $(dt.value.dt().table().body()).on('click', '.btn-show', function () {
-                let slug=this.getAttribute('data-slug')
-                router.push({name:'projects.show',params:{slug}})
+                let task_slug=this.getAttribute('data-slug')
+                router.push({name:'tasks.show',params:{slug:task_slug,project_slug:props.slug}})
             });
             $(dt.value.dt().table().body()).on('click', '.btn-edit', function () {
-                let slug=this.getAttribute('data-slug')
-                router.push({name:'projects.edit',params:{slug}})
+                let task_slug=this.getAttribute('data-slug')
+                router.push({name:'tasks.edit',params:{slug:task_slug,project_slug:props.slug}})
             });
-            // $(dt.value.dt().table().body()).on('click', '.btn-delete', function () {
-            //     let slug=this.getAttribute('data-slug')
-            //     router.push({name:'projects.show',params:{slug}})
-            // });
+            $(dt.value.dt().table().body()).on('click','.btn-delete', function () {
+                let slug=this.getAttribute('data-slug')
+                if(confirm('Do you want to delete this task?')){
+                    deleteTask(slug).then(()=>{
+                        dt.value.dt().table().ajax.reload();
+                        toast.success("Task deleted", {
+                            timeout: 2000
+                        });
+                    })            
+                }  
+            });
         })
 
-        onMounted(async()=>{
-            await getProject(props.slug);
-        })
+        
 
         return{
             project,
-            membres,
             options,
             dt
         }

@@ -57,15 +57,18 @@
 </template>
 
 <script>
+import useProject from '../../services/project';
+
 import project_datatable from '../../services/datatables/project-datatable';
 import DataTable from 'datatables.net-vue3';
 import DataTablesLib from 'datatables.net';
-import 'datatables.net-responsive-dt'
+import 'datatables.net-responsive-dt';
 
 import {ref,onMounted} from "vue"
 
 import { useRouter } from 'vue-router';
 
+import { useToast } from "vue-toastification";
 
 DataTable.use(DataTablesLib);
 
@@ -76,7 +79,10 @@ export default {
     },
 
     setup(){    
-        const {options}=project_datatable()
+        const {deleteProject}=useProject();
+        const {options}=project_datatable();
+        const toast = useToast();
+
         const dt=ref(null)
 
         const router=useRouter();
@@ -90,10 +96,18 @@ export default {
                 let slug=this.getAttribute('data-slug')
                 router.push({name:'projects.edit',params:{slug}})
             });
-            // $(dt.value.dt().table().body()).on('click', '.btn-delete', function () {
-            //     let slug=this.getAttribute('data-slug')
-            //     router.push({name:'projects.show',params:{slug}})
-            // });
+          
+            $(dt.value.dt().table().body()).on('click', '.btn-delete', function () {
+                let slug=this.getAttribute('data-slug')
+                if(confirm('Do you want to delete this project?')){
+                    deleteProject(slug).then(()=>{
+                        dt.value.dt().table().ajax.reload();
+                        toast.success("Project deleted", {
+                            timeout: 2000
+                        });
+                    })            
+                }              
+            });
         })
 
         return {

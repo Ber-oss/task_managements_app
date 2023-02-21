@@ -7,7 +7,6 @@ import { useUserStore } from '../store/userStore';
 export default function useProject(){
     const projects=ref([]);
     const project=ref({});
-    const membres=ref([]);
     const errors=ref({});
 
     const router=useRouter();
@@ -36,7 +35,6 @@ export default function useProject(){
         try{
             const response=await axiosClient.get(`projects/${id}`);
             project.value=response.data.project;
-            membres.value=response.data.membres;
         }
         catch(error){
             if(error.response.status==401){
@@ -90,7 +88,6 @@ export default function useProject(){
     const deleteProject=async (id)=>{
         try{
             await axiosClient.delete(`projects/${id}`);
-            router.push({name:'projects.index'});
         }
         catch(error){
             if(error.response.status==401){
@@ -108,7 +105,6 @@ export default function useProject(){
     return {
         projects,
         project,
-        membres,
         getProjects,
         getProject,
         saveProject,

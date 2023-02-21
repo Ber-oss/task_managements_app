@@ -19,7 +19,7 @@ class Project extends Model
     ];
 
     protected $casts = [
-        'created_at'=> 'date:d-m-Y'
+        'created_at'=> 'date:d/m/Y'
     ];
 
     /**

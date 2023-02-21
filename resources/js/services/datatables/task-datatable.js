@@ -1,5 +1,5 @@
 import { useUserStore } from '../../store/userStore';
-export default function task_datatable(){
+export default function task_datatable(project_slug=''){
     const store = useUserStore();
     const options={
         responsive: true,
@@ -11,6 +11,10 @@ export default function task_datatable(){
             url: "/api/tasks/getData",
             type: 'post',
             dataSrc: 'data', 
+            data:{
+                project_slug,
+                user_id:store.user.data.id
+            },
             headers: {
                 Authorization: `Bearer: ${store.user.token}`
             },
@@ -35,11 +39,43 @@ export default function task_datatable(){
             },
             {
                 targets: 2,
+                title: 'Start date',
+                data: 'start_date',
+                render: function (data, type, row, meta) {
+                    return row.start_date? new Date(row.start_date).toLocaleDateString('fr-FR'):'--'
+                }
+            },
+            {
+                targets: 3,
+                title: 'End date',
+                data: 'end_date',
+                render: function (data, type, row, meta) {
+                    const status={
+                        'pending':'warning',
+                        'processing':'primary',
+                        'completed':'success'
+                    }
+                        
+                    
+                    return `<span class='badge badge-${status[row.status]}'>${row.status}</span>`
+                }
+            },
+            {
+                targets: 3,
+                title: 'Status',
+                data: 'status',
+                render: function (data, type, row, meta) {
+                    'pending','processing','completed'
+                    return row.status
+                }
+            },
+            {
+                targets:4,
                 title: 'Created at',
                 data: 'created_at',
             },
             {
-                targets: 3,
+                targets: 5,
                 title:'Action',
                 data:'slug',
                 "orderable": false,

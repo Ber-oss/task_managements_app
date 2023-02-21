@@ -42,4 +42,6 @@ Route::group([
 Route::post('projects/getData',[ProjectController::class,'getData']);
 Route::post('tasks/getData',[TaskController::class,'getData']);
 
+Route::post('getUsers',[TaskController::class,'getUsers']);
+
 

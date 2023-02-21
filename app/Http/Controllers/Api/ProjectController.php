@@ -20,8 +20,11 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function getData(){
-        $projects=Project::with(['user','tasks'])->orderBy('created_at','desc');
+    public function getData(Request $request){
+        $projects=Project::with(['user','tasks.members'])
+        ->whereRelation('tasks.members','id',$request->user_id)
+        ->orWhere('user_id',$request->user_id)
+        ->orderBy('created_at','desc');
         return datatables($projects)->toJson();
     }
 
@@ -50,8 +53,7 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         return response()->json([
-            'project'=>$project->load(['user','tasks']),
-            'membres'=>User::whereRelation('tasks.project','id',$project->id)->get()
+            'project'=>$project->load(['user','tasks.members'])
         ]);
     }
 

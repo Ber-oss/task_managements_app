@@ -21,9 +21,9 @@ class Task extends Model
     ];
 
     protected $casts = [
-        'start_date' => 'date:d-m-Y',
-        'end_date' => 'date:d-m-Y',
-        'created_at'=> 'date:d-m-Y'
+        // 'start_date' => 'date',
+        // 'end_date' => 'date',
+        'created_at'=> 'date:d/m/Y'
     ];
 
     
@@ -32,8 +32,8 @@ class Task extends Model
     */
     protected static function booted(): void
     {
-        static::creating(function (Project $project) {
-            $project->slug=Str::slug($project->name);
+        static::creating(function (Task $task) {
+            $task->slug=Str::slug($task->name);
         });
     }
 

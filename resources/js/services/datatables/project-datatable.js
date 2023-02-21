@@ -11,6 +11,9 @@ export default function project_datatable(){
             url: "/api/projects/getData",
             type: 'post',
             dataSrc: 'data', 
+            data:{
+                user_id:store.user.data.id
+            },
             headers: {
                 Authorization: `Bearer: ${store.user.token}`
             },

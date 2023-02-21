@@ -15,5 +15,9 @@ export default {
 };
 </script>
 
-<style lang="css" scoped>
+<style>
+    .table{
+        white-space: nowrap;
+        width:100%;
+    }
 </style>

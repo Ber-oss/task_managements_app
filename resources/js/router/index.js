@@ -9,6 +9,8 @@ import ProjectCreate from '../pages/projects/ProjectCreate.vue'
 import ProjectShow from '../pages/projects/ProjectShow.vue'
 import ProjectEdit from '../pages/projects/ProjectEdit.vue'
 import ProjectTaskCreate from '../pages/projects/tasks/ProjectTaskCreate.vue'
+import ProjectTaskEdit from '../pages/projects/tasks/ProjectTaskEdit.vue'
+import ProjectTaskShow from '../pages/projects/tasks/ProjectTaskShow.vue'
 import TaskIndex from '../pages/tasks/TaskIndex.vue'
 
 const routes=[
@@ -51,9 +53,21 @@ const routes=[
                 'component':TaskIndex
             },
             {
-                'path':'/tasks/create/:project_id?',
+                'path':'/tasks/create/:project_slug?',
                 'name':'tasks.create',
                 'component':ProjectTaskCreate,
+                "props":true
+            },
+            {
+                'path':'/tasks/edit/:slug/:project_slug?',
+                'name':'tasks.edit',
+                'component':ProjectTaskEdit,
+                "props":true
+            },
+            {
+                'path':'/tasks/details/:slug/:project_slug?',
+                'name':'tasks.show',
+                'component':ProjectTaskShow,
                 "props":true
             },
         ]

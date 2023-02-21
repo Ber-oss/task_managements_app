@@ -11,11 +11,15 @@
     },
     "dependencies": {
         "@vitejs/plugin-vue": "^4.0.0",
+        "datatables.net-buttons": "^2.3.4",
         "datatables.net-responsive-dt": "^2.4.0",
         "datatables.net-vue3": "^2.0.0",
         "pinia": "^2.0.30",
         "vue": "^3.2.36",
         "vue-loader": "^17.0.1",
-        "vue-router": "^4.0.13"
+        "vue-router": "^4.0.13",
+        "vue-select": "^4.0.0-beta.6",
+        "vue-sweetalert2": "^5.0.5",
+        "vue-toastification": "^2.0.0-rc.5"
     }
 }
