@@ -27,11 +27,11 @@ export default function useAuth(){
             router.push({name:'dashboard'})
         }
         catch(err){
-            // if(err.response.status==401){
-            //     toast.error("Unauthorized", {
-            //         timeout: 2000
-            //     });
-            // }
+            if(err.response.status==401){
+                toast.error("Unauthorized", {
+                    timeout: 2000
+                });
+            }
            
             console.log("error",err)
         }

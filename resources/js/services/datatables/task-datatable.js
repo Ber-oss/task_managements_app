@@ -10,7 +10,7 @@ export default function task_datatable(dt,project_slug=''){
     const options={
         // responsive: true,
         dom: 'rtip',
-        order: [[4, 'desc'],[0,'asc']],
+        order: [[5, 'desc'],[0,'asc']],
 
         processing: true,
         serverSide: true,
@@ -58,7 +58,7 @@ export default function task_datatable(dt,project_slug=''){
                 data: 'end_date'
             },
             {
-                targets: 3,
+                targets: 4,
                 title: 'Status',
                 data: 'status',
                 render: function (data, type, row, meta) {
@@ -73,12 +73,12 @@ export default function task_datatable(dt,project_slug=''){
                 }
             },
             {
-                targets:4,
+                targets:5,
                 title: 'Created at',
                 data: 'created_at',
             },
             {
-                targets: 5,
+                targets: 6,
                 title:'Action',
                 data:'slug',
                 "orderable": false,

@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { reactive, onMounted} from 'vue';
+import { reactive} from 'vue';
 import useAuth from "../services/Auth"
 export default {
     setup(){
@@ -62,9 +62,6 @@ export default {
             await login({...form})
         }
 
-        onMounted(()=>{
-            console.log(localStorage.getItem("token"))
-        })
         return {
             submitForm,
             form

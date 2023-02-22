@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,7 +21,7 @@ class ProjectFactory extends Factory
         return [
             'name'=>fake()->unique()->sentence,
             'description'=>fake()->paragraphs(2,true),
-            'user_id'=>1
+            'user_id'=>User::all()->random()->id
         ];
     }
 }

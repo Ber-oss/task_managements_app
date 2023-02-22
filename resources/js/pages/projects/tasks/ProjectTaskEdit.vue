@@ -35,7 +35,7 @@
                 </div>
                 <div class="form-group">
                     <label>Membres</label>
-                    <v-select :options="users" @input="searchUser" v-model="form.members" multiple @close="selectClosed" :selectable="option => option.value"></v-select>
+                    <v-select :options="users" placeholder="Name of member" @input="searchUser" v-model="form.members" multiple @close="selectClosed" :selectable="option => option.value"></v-select>
                 </div>
                 <div class="form-group">
                     <label>Status</label>
