@@ -20,11 +20,16 @@ class ProjectController extends Controller
         ]);
     }
 
+    /**
+     * get data for datatable.
+     */
     public function getData(Request $request){
         $projects=Project::with(['user','tasks.members'])
-        ->whereRelation('tasks.members','id',$request->user_id)
-        ->orWhere('user_id',$request->user_id)
-        ->orderBy('created_at','desc');
+        ->where(function($query) use($request){
+            $query->whereRelation('tasks.members','id',$request->user_id)
+            ->orWhere('user_id',$request->user_id);
+        });
+        
         
         return datatables($projects)->toJson();
     }

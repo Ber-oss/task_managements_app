@@ -24,9 +24,9 @@
                         </div>
                         <div class="col-md-3 my-2">
                             <div class="d-flex align-items-center">
-                                <select class="form-control" id="datatable_search_own">
-                                    <option value="">My projects</option>
-                                    <option value="" selected>Projects that i have created</option>
+                                <select class="form-control" id="datatable_search_user_id">
+                                    <option value="" selected>All projects</option>
+                                    <option value="own">Created projects</option>
                                 </select>
                             </div>
                         </div>
@@ -35,6 +35,13 @@
                             <div class="d-flex align-items-center">
                                 <input type="text" class="form-control" placeholder="Name"
                                     id="datatable_search_name" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 my-2">
+                            <div class="d-flex align-items-center">
+                                <input type="date" class="form-control"
+                                    id="datatable_search_created_at" />
                             </div>
                         </div>
 
@@ -57,17 +64,12 @@
 </template>
 
 <script>
-import useProject from '../../services/project';
-
 import project_datatable from '../../services/datatables/project-datatable';
 import DataTable from 'datatables.net-vue3';
 import DataTablesLib from 'datatables.net';
 import 'datatables.net-responsive-dt';
 
 import {ref,onMounted} from "vue"
-
-import { useRouter } from 'vue-router';
-
 
 DataTable.use(DataTablesLib);
 
@@ -77,34 +79,12 @@ export default {
         DataTable
     },
 
-    setup(){    
-        const {deleteProject}=useProject();
-        const {options}=project_datatable();
-        
-
+    setup(){     
         const dt=ref(null)
-
-        const router=useRouter();
-
+        const {options,evt}=project_datatable(dt);
+        
         onMounted(()=>{
-            $(dt.value.dt().table().body()).on('click', '.btn-show', function () {
-                let slug=this.getAttribute('data-slug')
-                let id=this.getAttribute('data-id')
-                router.push({name:'projects.show',params:{slug,id}})
-            });
-            $(dt.value.dt().table().body()).on('click', '.btn-edit', function () {
-                let slug=this.getAttribute('data-slug')
-                router.push({name:'projects.edit',params:{slug}})
-            });
-          
-            $(dt.value.dt().table().body()).on('click', '.btn-delete', function () {
-                let slug=this.getAttribute('data-slug')
-                if(confirm('Do you want to delete this project?')){
-                    deleteProject(slug).then(()=>{
-                        dt.value.dt().table().ajax.reload();
-                    })            
-                }              
-            });
+           evt(dt)
         })
 
         return {

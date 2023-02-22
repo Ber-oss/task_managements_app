@@ -27,7 +27,7 @@ class TaskRequest extends FormRequest
             'name'=>['required','min:2','max:100'],
             'description'=>['nullable','min:2'],
             'start_date'=>['required','date'],
-            'end_date'=>['required','date'],
+            'end_date'=>['required','date','after:start_date'],
             'status'=>['sometimes','in:pending,processing,completed']
         ];
     }

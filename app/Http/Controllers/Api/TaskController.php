@@ -10,6 +10,7 @@ use Illuminate\Http\Response;
 use App\Http\Requests\TaskRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Throwable;
 
 class TaskController extends Controller
@@ -24,6 +25,9 @@ class TaskController extends Controller
         ]);
     }
 
+     /**
+     * get data for datatable.
+     */
     public function getData(Request $request){
       
         $tasks=Task::with(['project','members'])
@@ -32,8 +36,7 @@ class TaskController extends Controller
         })
         ->when($request->project_slug,function($query) use ($request){
             $query->orWhereRelation('project','slug',$request->project_slug);
-        })
-        ->orderBy('created_at','desc');
+        });
          
         return datatables($tasks)->toJson();
     }
@@ -56,8 +59,8 @@ class TaskController extends Controller
 
         $project=Project::whereSlug($request->project_slug)->firstOrFail();
         
-        if (auth()->user()->cannot('create', $project)) {
-             return response()->json(['error' => 'Forbidden'], 403);
+        if (! Gate::allows('create-task', $project)) {
+            return response()->json(['error' => 'Forbidden'], 403);
         }
 
         DB::beginTransaction();
@@ -68,7 +71,6 @@ class TaskController extends Controller
                 $task->members()->attach($request->members);
             }
            
-
             DB::commit();
 
         } catch (Throwable $e) {

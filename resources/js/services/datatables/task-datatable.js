@@ -1,8 +1,16 @@
 import { useUserStore } from '../../store/userStore';
-export default function task_datatable(project_slug=''){
+import useTask from '../task';
+import { useRouter } from 'vue-router';
+
+export default function task_datatable(dt,project_slug=''){
     const store = useUserStore();
+    const router=useRouter();
+    const {deleteTask}=useTask();
+
     const options={
         // responsive: true,
+        dom: 'rtip',
+        order: [[4, 'desc'],[0,'asc']],
 
         processing: true,
         serverSide: true,
@@ -103,7 +111,27 @@ export default function task_datatable(project_slug=''){
         ]
     }
 
+    const evt=()=>{
+        $(dt.value.dt().table().body()).on('click', '.btn-show', function () {
+            let task_slug=this.getAttribute('data-slug')
+            router.push({name:'tasks.show',params:{slug:task_slug,project_slug}})
+        });
+        $(dt.value.dt().table().body()).on('click', '.btn-edit', function () {
+            let task_slug=this.getAttribute('data-slug')
+            router.push({name:'tasks.edit',params:{slug:task_slug,project_slug}})
+        });
+        $(dt.value.dt().table().body()).on('click','.btn-delete', function () {
+            let slug=this.getAttribute('data-slug')
+            if(confirm('Do you want to delete this task?')){
+                deleteTask(slug).then(()=>{
+                    dt.value.dt().table().ajax.reload();
+                })            
+            }  
+        });
+    }
+
     return {
-        options
+        options,
+        evt
     }
 }
